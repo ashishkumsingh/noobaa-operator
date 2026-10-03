@@ -111,6 +111,9 @@ func tlsConfig(config map[string]interface{}, namespace string) error {
 
 	if caCertSecretName, ok := config[VaultCaCert]; ok {
 		secret.Name = caCertSecretName.(string)
+                if secret.Name == "" {
+                        return fmt.Errorf(`❌ CA cert secret name is empty in namespace %q. Remove VAULT_CACERT from KMS config or provide a valid secret name`, secret.Namespace)
+                }
 		if !util.KubeCheckOptional(secret) {
 			return fmt.Errorf(`❌ Could not find secret %q in namespace %q`, secret.Name, secret.Namespace)
 		}
@@ -123,6 +126,9 @@ func tlsConfig(config map[string]interface{}, namespace string) error {
 
 	if clientCertSecretName, ok := config[VaultClientCert]; ok {
 		secret.Name = clientCertSecretName.(string)
+                if secret.Name == "" {
+                        return fmt.Errorf(`❌ Client cert secret name is empty in namespace %q. Remove VAULT_CLIENT_CERT from KMS config or provide a valid secret name`, secret.Namespace)
+                }
 		if !util.KubeCheckOptional(secret) {
 			return fmt.Errorf(`❌ Could not find secret %q in namespace %q`, secret.Name, secret.Namespace)
 		}
@@ -135,6 +141,9 @@ func tlsConfig(config map[string]interface{}, namespace string) error {
 	}
 	if clientKeySecretName, ok := config[VaultClientKey]; ok {
 		secret.Name = clientKeySecretName.(string)
+                if secret.Name == "" {
+                        return fmt.Errorf(`❌ Client key secret name is empty in namespace %q. Remove VAULT_CLIENT_KEY from KMS config or provide a valid secret name`, secret.Namespace)
+                }
 		if !util.KubeCheckOptional(secret) {
 			return fmt.Errorf(`❌ Could not find secret %q in namespace %q`, secret.Name, secret.Namespace)
 		}
